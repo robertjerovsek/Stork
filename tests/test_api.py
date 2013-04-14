@@ -16,7 +16,7 @@ class TestApi:
     def test_default_header(self):
         headers = {'accept-language': 'es'}
         api = stork.Api('http://myapi/v1', headers=headers)
-        r = api.resource('path').get()
+        api.resource('path').get()
 
         stork.Resource.client.request.assert_called_with(
             'get', url='http://myapi/v1/path', params=None, data=None,
@@ -24,14 +24,13 @@ class TestApi:
             verify=None, allow_redirects=None)
 
     def test_default_header_overriden(self):
-        headers = {'accept-language': 'es'}
-        api = stork.Api('http://myapi/v1', headers=headers)
-        r = api.resource('path').get(headers={'accept-language': 'en'})
+        api = stork.Api('http://myapi/v1', headers={'accept-language': 'es'})
+        api.resource('path').get(headers={'accept-language': 'en'})
 
         stork.Resource.client.request.assert_called_with(
             'get', url='http://myapi/v1/path', params=None, data=None,
-            headers=headers, cookies=None, timeout=None, auth=None,
-            verify=None, allow_redirects=None)
+            headers={'accept-language': 'en'}, cookies=None, timeout=None,
+            auth=None, verify=None, allow_redirects=None)
 
 
 class TestResource:
@@ -53,7 +52,7 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'options', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)
 
     def test_get(self):
@@ -61,7 +60,7 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'get', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)
 
     def test_post(self):
@@ -69,7 +68,7 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'post', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)
 
     def test_put(self):
@@ -77,7 +76,7 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'put', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)
 
     def test_patch(self):
@@ -85,7 +84,7 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'patch', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)
 
     def test_delete(self):
@@ -93,5 +92,5 @@ class TestResource:
 
         stork.Resource.client.request.assert_called_with(
             'delete', url='path1/path2', params=None, data=None,
-            headers=None, cookies=None, timeout=None, auth=None,
+            headers={}, cookies=None, timeout=None, auth=None,
             verify=None, allow_redirects=None)

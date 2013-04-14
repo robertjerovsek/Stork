@@ -13,7 +13,7 @@ class Resource(namedtuple('Resource', ('path headers timeout auth'))):
         return self.__class__(url_join(self.path, path), headers=self.headers,
                               timeout=self.timeout, auth=self.auth)
 
-    def request(self, method, params=None, data=None, headers=None,
+    def request(self, method, params=None, data=None, headers={},
                 cookies=None, files=None, auth=None, timeout=None, verify=None,
                 allow_redirects=None):
         """Send a request.
@@ -30,7 +30,10 @@ class Resource(namedtuple('Resource', ('path headers timeout auth'))):
 
         :return: :class:`Response <Response>` object.
         """
-        headers = self.headers
+        if self.headers is not None:
+            default_headers = self.headers.copy()
+            default_headers.update(headers)
+            headers = default_headers
         if timeout is None:
             timeout = self.timeout
         if auth is None:
