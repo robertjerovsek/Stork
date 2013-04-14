@@ -3,75 +3,95 @@ import mock
 import stork
 
 
+stork.Resource.client = mock.Mock()
+
+
 class TestApi:
     def test_resource(self):
-        api = stork.Api('url')
+        api = stork.Api('http://myapi/v1')
         resource = api.resource('path')
 
-        assert isinstance(resource, stork.Resource)
+        assert 'http://myapi/v1/path' == resource.path
+
+    def test_default_header(self):
+        headers = {'accept-language': 'es'}
+        api = stork.Api('http://myapi/v1', headers=headers)
+        r = api.resource('path').get()
+
+        stork.Resource.client.request.assert_called_with(
+            'get', url='http://myapi/v1/path', params=None, data=None,
+            headers=headers, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
+
+    def test_default_header_overriden(self):
+        headers = {'accept-language': 'es'}
+        api = stork.Api('http://myapi/v1', headers=headers)
+        r = api.resource('path').get(headers={'accept-language': 'en'})
+
+        stork.Resource.client.request.assert_called_with(
+            'get', url='http://myapi/v1/path', params=None, data=None,
+            headers=headers, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
 
 class TestResource:
     def test_nested_resource(self):
-        r = stork.Resource('path1').resource('path2')
+        r = stork.Api('path1').resource('path2')
 
         assert r.path == 'path1/path2'
 
     def test_nested_resource_slash_beginning(self):
-        r = stork.Resource('path1').resource('/path2')
+        r = stork.Api('path1').resource('/path2')
         assert r.path == 'path1/path2'
 
     def test_nested_resource_slash_end(self):
-        r = stork.Resource('path1/').resource('path2')
+        r = stork.Api('path1/').resource('path2')
         assert r.path == 'path1/path2'
 
     def test_options(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').options(**params)
+        stork.Api('path1').resource('path2').options()
 
         stork.Resource.client.request.assert_called_with(
-            'options', url='path', params=params)
+            'options', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
     def test_get(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').get(**params)
+        stork.Api('path1').resource('path2').get()
 
         stork.Resource.client.request.assert_called_with(
-            'get', url='path', params=params)
+            'get', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
     def test_post(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        data = {'param3': 'value3'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').post(data=data, **params)
+        stork.Api('path1').resource('path2').post()
 
         stork.Resource.client.request.assert_called_with(
-            'post', url='path', data=data, params=params)
+            'post', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
     def test_put(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        data = {'param3': 'value3'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').put(data=data, **params)
+        stork.Api('path1').resource('path2').put()
 
         stork.Resource.client.request.assert_called_with(
-            'put', url='path', data=data, params=params)
+            'put', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
     def test_patch(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        data = {'param3': 'value3'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').patch(data=data, **params)
+        stork.Api('path1').resource('path2').patch()
 
         stork.Resource.client.request.assert_called_with(
-            'patch', url='path', data=data, params=params)
+            'patch', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
 
     def test_delete(self):
-        params = {'param1': 'value1', 'param2': 'value2'}
-        stork.Resource.client = mock.Mock()
-        stork.Resource('path').delete(**params)
+        stork.Api('path1').resource('path2').delete()
 
         stork.Resource.client.request.assert_called_with(
-            'delete', url='path', params=params)
+            'delete', url='path1/path2', params=None, data=None,
+            headers=None, cookies=None, timeout=None, auth=None,
+            verify=None, allow_redirects=None)
